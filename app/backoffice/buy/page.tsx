@@ -20,6 +20,7 @@ export default function Page() {
   const [remark, setRemark] = useState("");
   const [products, setProducts] = useState([]);
   const [id, setId] = useState(0);
+  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     listProducts();
@@ -58,6 +59,7 @@ export default function Page() {
         customerPhone,
         customerAddress,
         remark,
+        qty,
       };
 
       if (id === 0) {
@@ -98,6 +100,7 @@ export default function Page() {
     setCustomerAddress(product.customerAddress);
     setRemark(product.remark ?? "");
     setId(product.id);
+    setQty(1);
 
     handleOpenModal();
   };
@@ -134,6 +137,7 @@ export default function Page() {
     setCustomerPhone("");
     setCustomerAddress("");
     setRemark("");
+    setQty(1);
   };
 
   return (
@@ -258,6 +262,13 @@ export default function Page() {
             type="text"
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
+          />
+
+          <div>จำนวนสินค้า</div>
+          <input
+            type="number"
+            value={qty}
+            onChange={(e) => setQty(Number(e.target.value ?? 0))}
           />
 
           <div className="mt-2">
