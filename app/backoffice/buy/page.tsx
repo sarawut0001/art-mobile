@@ -19,6 +19,7 @@ export default function Page() {
   const [customerAddress, setCustomerAddress] = useState("");
   const [remark, setRemark] = useState("");
   const [products, setProducts] = useState([]);
+  const [id, setId] = useState(0);
 
   useEffect(() => {
     listProducts();
@@ -58,7 +59,13 @@ export default function Page() {
         customerAddress,
         remark,
       };
-      await axios.post(`${config.apiUrl}/buy/create`, payload);
+
+      if (id === 0) {
+        await axios.post(`${config.apiUrl}/buy/create`, payload);
+      } else {
+        await axios.put(`${config.apiUrl}/buy/update/${id}`, payload);
+        setId(0);
+      }
 
       Swal.fire({
         icon: "success",
@@ -77,6 +84,22 @@ export default function Page() {
       });
       console.log("error", error);
     }
+  };
+
+  const handleEdit = (id: number) => {
+    const product = products.find((product: any) => product.id === id) as any;
+    setSerial(product.serial ?? "");
+    setName(product.name);
+    setRelease(product.release);
+    setColor(product.color);
+    setPrice(product.price);
+    setCustomerName(product.customerName);
+    setCustomerPhone(product.customerPhone);
+    setCustomerAddress(product.customerAddress);
+    setRemark(product.remark ?? "");
+    setId(product.id);
+
+    handleOpenModal();
   };
 
   return (
@@ -115,7 +138,10 @@ export default function Page() {
                 <td>{product.customerPhone}</td>
                 <td>{product.remark}</td>
                 <td className="text-center">
-                  <button className="btn-edit mr-1">
+                  <button
+                    className="btn-edit mr-1"
+                    onClick={() => handleEdit(product.id)}
+                  >
                     <i className="fa-solid fa-edit"></i>
                   </button>
                   <button className="btn-delete">
