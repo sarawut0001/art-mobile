@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { config } from "@/app/config";
 import axios from "axios";
@@ -17,6 +18,24 @@ export default function Page() {
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [remark, setRemark] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    listProducts();
+  }, []);
+
+  const listProducts = async () => {
+    try {
+      const response = await axios.get(`${config.apiUrl}/buy/list`);
+      setProducts(response.data);
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "",
+        text: error.message,
+      });
+    }
+  };
 
   const handleOpenModal = () => {
     setIsOpen(true);
@@ -47,7 +66,9 @@ export default function Page() {
         text: "ข้อมูลถูกบันทึกเรียบร้อย",
         timer: 2000,
       });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      handleCloseModal();
+      listProducts();
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -67,6 +88,44 @@ export default function Page() {
           <i className="fa-solid fa-plus mr-2"></i>
           เพิ่มรายการ
         </button>
+
+        <table className="table mt-3">
+          <thead>
+            <tr>
+              <th>serial</th>
+              <th>ชื่อสินค้า</th>
+              <th>รุ่น</th>
+              <th>สี</th>
+              <th>ราคา</th>
+              <th>ลูกค้า</th>
+              <th>เบอร์โทรศัพท์</th>
+              <th>หมายเหตุ</th>
+              <th className="w-[110px]"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product: any) => (
+              <tr key={product.id}>
+                <td>{product.serial}</td>
+                <td>{product.name}</td>
+                <td>{product.release}</td>
+                <td>{product.color}</td>
+                <td>{product.price}</td>
+                <td>{product.customerName}</td>
+                <td>{product.customerPhone}</td>
+                <td>{product.remark}</td>
+                <td className="text-center">
+                  <button className="btn-edit mr-1">
+                    <i className="fa-solid fa-edit"></i>
+                  </button>
+                  <button className="btn-delete">
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
         <Modal title="เพิ่มรายการ" isOpen={isOpen} onClose={handleCloseModal}>
           <div>Serial สินค้า</div>
