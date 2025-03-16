@@ -102,12 +102,52 @@ export default function Page() {
     handleOpenModal();
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      const button = await Swal.fire({
+        title: "คุณต้องการลบรายการนี้หรือไม่",
+        icon: "question",
+        showCancelButton: true,
+        showConfirmButton: true,
+      });
+
+      if (button.isConfirmed) {
+        await axios.delete(`${config.apiUrl}/buy/remove/${id}`);
+        listProducts();
+      }
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "ผิดพลาด",
+        text: error.message,
+      });
+    }
+  };
+
+  const handleClear = () => {
+    setSerial("");
+    setName("");
+    setRelease("");
+    setColor("");
+    setPrice(0);
+    setCustomerName("");
+    setCustomerPhone("");
+    setCustomerAddress("");
+    setRemark("");
+  };
+
   return (
     <>
       <h1 className="content-header">รายการซื้อ</h1>
 
       <div>
-        <button className="btn" onClick={handleOpenModal}>
+        <button
+          className="btn"
+          onClick={() => {
+            handleClear();
+            handleOpenModal();
+          }}
+        >
           <i className="fa-solid fa-plus mr-2"></i>
           เพิ่มรายการ
         </button>
@@ -144,7 +184,10 @@ export default function Page() {
                   >
                     <i className="fa-solid fa-edit"></i>
                   </button>
-                  <button className="btn-delete">
+                  <button
+                    className="btn-delete"
+                    onClick={() => handleDelete(product.id)}
+                  >
                     <i className="fa-solid fa-trash"></i>
                   </button>
                 </td>
