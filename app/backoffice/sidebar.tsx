@@ -129,7 +129,7 @@ export default function Sidebar() {
         </div>
 
         <div>
-          <Link href="/backoffice/repair">
+          <Link href="/backoffice/user">
             <i className="fa fa-users mr-2 w-[25px] text-center"></i>
             ผู้ใช้งาน
           </Link>
