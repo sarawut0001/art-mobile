@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -30,6 +29,7 @@ export default function Page() {
     try {
       const response = await axios.get(`${config.apiUrl}/buy/list`);
       setProducts(response.data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -78,6 +78,7 @@ export default function Page() {
 
       handleCloseModal();
       listProducts();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -89,6 +90,7 @@ export default function Page() {
   };
 
   const handleEdit = (id: number) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const product = products.find((product: any) => product.id === id) as any;
     setSerial(product.serial ?? "");
     setName(product.name);
@@ -118,6 +120,7 @@ export default function Page() {
         await axios.delete(`${config.apiUrl}/buy/remove/${id}`);
         listProducts();
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       Swal.fire({
         icon: "error",
@@ -171,31 +174,38 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any  */}
             {products.map((product: any) => (
-              <tr key={product.id}>
-                <td>{product.serial}</td>
-                <td>{product.name}</td>
-                <td>{product.release}</td>
-                <td>{product.color}</td>
-                <td className="text-right">{product.price.toLocaleString()}</td>
-                <td>{product.customerName}</td>
-                <td>{product.customerPhone}</td>
-                <td>{product.remark}</td>
-                <td className="text-center">
-                  <button
-                    className="btn-edit mr-1"
-                    onClick={() => handleEdit(product.id)}
-                  >
-                    <i className="fa-solid fa-edit"></i>
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(product.id)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <>
+                {product.status !== "sold" && (
+                  <tr key={product.id}>
+                    <td>{product.serial}</td>
+                    <td>{product.name}</td>
+                    <td>{product.release}</td>
+                    <td>{product.color}</td>
+                    <td className="text-right">
+                      {product.price.toLocaleString()}
+                    </td>
+                    <td>{product.customerName}</td>
+                    <td>{product.customerPhone}</td>
+                    <td>{product.remark}</td>
+                    <td className="text-center">
+                      <button
+                        className="btn-edit mr-1"
+                        onClick={() => handleEdit(product.id)}
+                      >
+                        <i className="fa-solid fa-edit"></i>
+                      </button>
+                      <button
+                        className="btn-delete"
+                        onClick={() => handleDelete(product.id)}
+                      >
+                        <i className="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </>
             ))}
           </tbody>
         </table>

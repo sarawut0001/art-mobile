@@ -46,11 +46,19 @@ export default function Page() {
       getSells();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      Swal.fire({
-        icon: "error",
-        title: "",
-        text: error.message,
-      });
+      if (error.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "ไม่พบรายการสินค้า",
+          text: "ไม่พบรายการสินค้า หรือไม่มีใน Stock",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "",
+          text: error.message,
+        });
+      }
     }
   };
 
