@@ -33,11 +33,19 @@ export default function Signin() {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      Swal.fire({
-        title: "Error",
-        text: error.message,
-        icon: "error",
-      });
+      if (error.response.status === 401) {
+        Swal.fire({
+          title: "Error",
+          text: "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง",
+          icon: "error",
+        });
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: error.message,
+          icon: "error",
+        });
+      }
     }
   };
 
