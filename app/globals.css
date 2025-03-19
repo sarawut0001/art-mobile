@@ -25,6 +25,10 @@ input {
   @apply p-2 rounded-md border border-gray-600 w-full
 }
 
+.form-control {
+  @apply p-2 rounded-md border border-gray-600 w-full
+}
+
 .btn {
   @apply bg-teal-600 text-white px-6 py-2 rounded-md
 }
