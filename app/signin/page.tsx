@@ -15,14 +15,15 @@ export default function Signin() {
   const handleSignIn = async () => {
     try {
       const payload = { username, password };
-      const response = await axios.post(
-        `${config.apiUrl}/user/signin`,
-        payload
-      );
+      const res = await axios.post(`${config.apiUrl}/user/signin`, payload);
 
-      if (response.data.token !== null) {
-        localStorage.setItem("token", response.data.token);
-        router.push("/backoffice/dashboard");
+      if (res.data.token !== null) {
+        localStorage.setItem("token", res.data.token);
+        if (res.data.level === "admin") {
+          router.push("/backoffice/dashboard");
+        } else {
+          router.push("/backoffice/sell");
+        }
       } else {
         Swal.fire({
           title: "ตรวจสอบ User",
