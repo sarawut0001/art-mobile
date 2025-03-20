@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { config } from "@/app/config";
 import axios from "axios";
 import Modal from "../modal";
+import Pagination from "@/app/pagination";
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,14 +22,21 @@ export default function Page() {
   const [id, setId] = useState(0);
   const [qty, setQty] = useState(1);
 
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [totalRows, setTotalRows] = useState(0);
+
   useEffect(() => {
     listProducts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   const listProducts = async () => {
     try {
-      const response = await axios.get(`${config.apiUrl}/buy/list`);
-      setProducts(response.data);
+      const res = await axios.get(`${config.apiUrl}/buy/list/${page}`);
+      setProducts(res.data.products);
+      setTotalRows(res.data.totalRows);
+      setTotalPage(res.data.totalPages);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       Swal.fire({
@@ -176,39 +184,40 @@ export default function Page() {
           <tbody>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any  */}
             {products.map((product: any) => (
-              <>
-                {product.status !== "sold" && (
-                  <tr key={product.id}>
-                    <td>{product.serial}</td>
-                    <td>{product.name}</td>
-                    <td>{product.release}</td>
-                    <td>{product.color}</td>
-                    <td className="text-right">
-                      {product.price.toLocaleString()}
-                    </td>
-                    <td>{product.customerName}</td>
-                    <td>{product.customerPhone}</td>
-                    <td>{product.remark}</td>
-                    <td className="text-center">
-                      <button
-                        className="btn-edit mr-1"
-                        onClick={() => handleEdit(product.id)}
-                      >
-                        <i className="fa-solid fa-edit"></i>
-                      </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(product.id)}
-                      >
-                        <i className="fa-solid fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                )}
-              </>
+              <tr key={product.id}>
+                <td>{product.serial}</td>
+                <td>{product.name}</td>
+                <td>{product.release}</td>
+                <td>{product.color}</td>
+                <td className="text-right">{product.price.toLocaleString()}</td>
+                <td>{product.customerName}</td>
+                <td>{product.customerPhone}</td>
+                <td>{product.remark}</td>
+                <td className="text-center">
+                  <button
+                    className="btn-edit mr-1"
+                    onClick={() => handleEdit(product.id)}
+                  >
+                    <i className="fa-solid fa-edit"></i>
+                  </button>
+                  <button
+                    className="btn-delete"
+                    onClick={() => handleDelete(product.id)}
+                  >
+                    <i className="fa-solid fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
+
+        <Pagination
+          page={page}
+          setPage={setPage}
+          totalPage={totalPage}
+          totalRows={totalRows}
+        />
 
         <Modal title="เพิ่มรายการ" isOpen={isOpen} onClose={handleCloseModal}>
           <div>Serial สินค้า</div>
