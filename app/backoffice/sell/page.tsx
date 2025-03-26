@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { config } from "@/app/config";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [serial, setSeraial] = useState("");
@@ -11,6 +12,7 @@ export default function Page() {
   const [sells, setSells] = useState([]);
   // const [id, setId] = useState(0)
   const [totalAmount, setTotalAmount] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     getSells();
@@ -113,7 +115,18 @@ export default function Page() {
 
   return (
     <div>
-      <div className="content-header">ขายสินค้า</div>
+      <div className="content-header flex justify-between">
+        <div>ขายสินค้า</div>
+        <div>
+          <button
+            className="btn text-lg"
+            onClick={() => router.push("/backoffice/sell/history")}
+          >
+            <i className="fa-solid fa-file-alt mr-3"></i>
+            ประวัดิการขาย
+          </button>
+        </div>
+      </div>
       <div className="flex gap-2 items-end">
         <div className="w-full">
           <div>Serial</div>
