@@ -3,14 +3,14 @@
 import { config } from "@/app/config";
 import axios from "axios";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Page() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [sellList, setSellList] = useState<any[]>([]);
-  const rounter = useRouter();
+  // const rounter = useRouter();
 
   useEffect(() => {
     getSellList();
