@@ -151,6 +151,28 @@ export default function Page() {
     setQty(1);
   };
 
+  const exportToExcel = async () => {
+    try {
+      const payload = { products };
+
+      const res = await axios.post(`${config.apiUrl}/buy/export`, payload);
+      const fileName = res.data.fileName;
+      const a = document.createElement("a");
+      a.href = config.apiUrl + "/uploads/" + fileName;
+      a.download = fileName;
+      a.target = "_blank";
+      a.click();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "ผิดพลาด",
+        text: error.message,
+      });
+    }
+  };
+
   return (
     <>
       <h1 className="content-header">รายการซื้อ</h1>
@@ -165,6 +187,11 @@ export default function Page() {
         >
           <i className="fa-solid fa-plus mr-2"></i>
           เพิ่มรายการ
+        </button>
+
+        <button className="btn ms-1" onClick={exportToExcel}>
+          <i className="fa-solid fa-file-excel mr-2"></i>
+          ส่งออกเป็น Excel
         </button>
 
         <table className="table mt-3">
